@@ -1,11 +1,17 @@
 import { defineConfig } from "astro/config";
+import { loadEnv } from "vite";
+const { PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET } = loadEnv(
+  process.env.NODE_ENV,
+  process.cwd(),
+  "",
+);
+
+import svelte from "@astrojs/svelte";
+import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel";
 
-// https://astro.build/config
-import tailwind from "@astrojs/tailwind";
-
-// https://astro.build/config
-import svelte from "@astrojs/svelte";
+import react from "@astrojs/react";
+import sanity from "@sanity/astro";
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,5 +24,16 @@ export default defineConfig({
       },
     }),
     svelte(),
+    react(),
+    sanity({
+      projectId: PUBLIC_SANITY_PROJECT_ID,
+      dataset: PUBLIC_SANITY_DATASET,
+      useCdn: true,
+      apiVersion: "2025-03-11",
+      studioBasePath: "/admin",
+      stega: {
+        studioUrl: "/admin",
+      },
+    }),
   ],
 });
