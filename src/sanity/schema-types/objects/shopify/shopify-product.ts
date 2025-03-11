@@ -148,19 +148,19 @@ export const shopifyProduct = defineField({
       ],
     }),
     // Variants
-    defineField({
-      fieldset: "variants",
-      name: "variants",
-      title: "Variants",
-      type: "array",
-      of: [
-        {
-          title: "Variant",
-          type: "reference",
-          weak: true,
-          to: [{ type: "productVariant" }],
-        },
-      ],
-    }),
+    // defineField({
+    //   fieldset: "variants",
+    //   name: "variants",
+    //   title: "Variants",
+    //   type: "array",
+    //   of: [
+    //     {
+    //       title: "Variant",
+    //       type: "reference",
+    //       weak: true,
+    //       to: [{ type: "productVariant" }],
+    //     },
+    //   ],
+    // }),
   ],
 });

@@ -12,7 +12,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
  *  }
  */
 export const richText = defineType({
-  name: "richtext",
+  name: "richText",
   type: "array",
   of: [
     defineArrayMember({

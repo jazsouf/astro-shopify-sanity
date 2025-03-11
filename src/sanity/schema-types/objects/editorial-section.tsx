@@ -19,7 +19,7 @@ export const editorialSection = defineType({
     }),
     defineField({
       name: "content",
-      type: "blockContent",
+      type: "richText",
       description: "Add content to your section. Optional.",
     }),
     defineField({
