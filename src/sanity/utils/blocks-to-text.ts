@@ -1,8 +1,8 @@
-import type { PortableTextBlock } from "@portabletext/types";
+import type { Block } from "astro-portabletext/types";
 
 const defaults = { nonTextBehavior: "remove" };
 
-export function blocksToText(blocks: PortableTextBlock[] = [], opts = {}) {
+export function blocksToText(blocks: Block[] = [], opts = {}) {
   if (typeof blocks === "string") {
     return blocks;
   }

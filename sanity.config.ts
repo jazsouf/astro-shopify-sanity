@@ -15,8 +15,8 @@ import { singletonTypes } from "./src/sanity/structure/singletons";
 const devPlugins = [visionTool({ title: "API" })];
 
 export default defineConfig({
-  projectId: import.meta.env.PUBLIC_SANITY_STUDIO_PROJECT_ID,
-  dataset: import.meta.env.PUBLIC_SANITY_STUDIO_DATASET,
+  projectId: process.env.PUBLIC_SANITY_STUDIO_PROJECT_ID || "",
+  dataset: process.env.PUBLIC_SANITY_STUDIO_DATASET || "production",
   plugins: [
     structureTool({
       structure, // Custom studio structure configuration, imported from ./src/structure.ts

@@ -1,5 +1,5 @@
 ---
-import { getProductRecommendations } from "../utils/shopify";
+import { getProductRecommendations } from "../data/shopify";
 import ProductCard from "./ProductCard.astro";
 export interface Props {
   productId: string;
@@ -22,7 +22,7 @@ const productRecommendations = await getProductRecommendations({
           Customers also purchased
         </h2>
 
-        <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {productRecommendations.map((product) => (
             <ProductCard product={product} />
           ))}

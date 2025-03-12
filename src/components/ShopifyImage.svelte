@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { z } from "zod";
-  import type { ImageResult } from "../utils/schemas";
+  import type { ImageResult } from "../data/shopify/schemas";
 
   interface Props {
     image: z.infer<typeof ImageResult>;

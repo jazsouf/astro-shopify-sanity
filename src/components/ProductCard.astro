@@ -1,6 +1,6 @@
 ---
 import type { z } from "zod";
-import type { ProductResult } from "../utils/schemas";
+import type { ProductResult } from "../data/shopify/schemas";
 
 import ShopifyImage from "./ShopifyImage.svelte";
 import Money from "./Money.svelte";
@@ -53,7 +53,7 @@ const { product } = Astro.props as Props;
       </button>
     </div>
   </div>
-  <div class="flex justify-between py-6 px-5 text-zinc-700">
+  <div class="flex justify-between px-5 py-6 text-zinc-700">
     <h3 class="group-hover:underline">{product?.title}</h3>
     <p class="font-bold">
       <Money price={product?.variants.nodes[0].price} />

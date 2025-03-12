@@ -3,11 +3,15 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import CartDrawer from "../components/CartDrawer.svelte";
 import AnnouncementBar from "../components/AnnouncementBar.astro";
+import { VisualEditing } from "@sanity/astro/visual-editing";
 
 export interface Props {
   title: string;
   description?: string;
 }
+
+const visualEditingEnabled =
+  import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED == "true";
 
 const defaultDesc =
   "A lightweight and minimalit Astro starter theme using Shopify with Svelte, Tailwind, and TypeScript.";
@@ -35,5 +39,6 @@ const { title, description = defaultDesc } = Astro.props as Props;
       <slot />
     </main>
     <Footer />
+    <VisualEditing enabled={visualEditingEnabled} />
   </body>
 </html>
