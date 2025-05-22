@@ -39,24 +39,24 @@ export const editorialSection = defineType({
     },
     prepare({ cover }) {
       let blockType = "";
-      if (cover[0]?._type === "picture") {
+      if (cover && cover[0]?._type === "backgroundImage") {
         blockType = "Image";
       }
-      if (cover[0]?._type === "color") {
+      if (cover && cover[0]?._type === "color") {
         blockType = "Color";
       }
 
       return {
         title: `${blockType} Block`,
         media:
-          blockType === "Image" ? (
+          blockType === "Image" && cover?.length ? (
             cover[0]
           ) : (
             <div
               style={{
                 width: "100%",
                 aspectRatio: "1",
-                background: `${cover[0]?.hex}`,
+                background: `${cover?.length ? cover[0]?.hex : "#fff"}`,
                 border: "1px #fff9 solid",
               }}
             />

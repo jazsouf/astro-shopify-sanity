@@ -54,6 +54,7 @@ export const collection = defineType({
       name: "pageBuilder",
       title: "Page Builder",
       type: "array",
+      readOnly: false,
       of: [{ type: "editorialSection" }],
       options: {
         insertMenu: {

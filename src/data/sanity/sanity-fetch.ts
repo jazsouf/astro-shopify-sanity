@@ -3,7 +3,7 @@ import { sanityClient as client } from "sanity:client";
 
 const visualEditingEnabled =
   import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
-const token = import.meta.env.SANITY_STUDIO_API_READ_TOKEN;
+const token = import.meta.env.SANITY_API_READ_TOKEN;
 
 export async function sanityFetch<QueryResponse>({
   query,

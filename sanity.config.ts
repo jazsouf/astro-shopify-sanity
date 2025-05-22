@@ -18,8 +18,15 @@ export default defineConfig({
   name: "astro-shopify-sanity",
   title: "Astro Shopify Sanity",
   icon: TrolleyIcon,
-  projectId: import.meta.env.PUBLIC_SANITY_STUDIO_PROJECT_ID || "",
-  dataset: import.meta.env.PUBLIC_SANITY_STUDIO_DATASET || "production",
+  projectId:
+    typeof process !== "undefined" && process?.env
+      ? process.env.PUBLIC_SANITY_STUDIO_PROJECT_ID ||
+        import.meta.env.PUBLIC_SANITY_STUDIO_PROJECT_ID
+      : import.meta.env.PUBLIC_SANITY_STUDIO_PROJECT_ID,
+  dataset:
+    typeof process !== "undefined" && process?.env
+      ? process.env.PUBLIC_SANITY_STUDIO_DATASET || "production"
+      : "production",
   plugins: [
     structureTool({
       structure, // Custom studio structure configuration, imported from ./src/structure.ts

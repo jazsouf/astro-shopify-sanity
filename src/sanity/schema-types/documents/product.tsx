@@ -40,6 +40,7 @@ export const product = defineType({
       title: "Page Builder",
       group: "editorial",
       type: "array",
+      readOnly: false,
       // Add custom block to the list
       of: [{ type: "editorialSection" }],
       options: {
