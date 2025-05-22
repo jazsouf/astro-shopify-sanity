@@ -6,14 +6,14 @@ const { PUBLIC_SANITY_STUDIO_PROJECT_ID, PUBLIC_SANITY_STUDIO_DATASET } =
 
 import svelte from "@astrojs/svelte";
 import react from "@astrojs/react";
-import vercel from "@astrojs/vercel";
+import netlify from "@astrojs/netlify";
 import sanity from "@sanity/astro";
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
   output: "server",
-  adapter: vercel(),
+  adapter: netlify(),
   integrations: [
     svelte(),
     react(),
