@@ -7,9 +7,10 @@ const { PUBLIC_SANITY_STUDIO_PROJECT_ID, PUBLIC_SANITY_STUDIO_DATASET } =
 import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel";
+import tailwindcss from "@tailwindcss/vite";
 
-import react from "@astrojs/react";
-import sanity from "@sanity/astro";
+// https://astro.build/config
+import svelte from "@astrojs/svelte";
 
 // https://astro.build/config
 export default defineConfig({
