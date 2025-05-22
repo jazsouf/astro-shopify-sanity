@@ -5,23 +5,16 @@ const { PUBLIC_SANITY_STUDIO_PROJECT_ID, PUBLIC_SANITY_STUDIO_DATASET } =
   loadEnv(process.env.NODE_ENV, process.cwd(), "");
 
 import svelte from "@astrojs/svelte";
-import tailwind from "@astrojs/tailwind";
+import react from "@astrojs/react";
 import vercel from "@astrojs/vercel";
+import sanity from "@sanity/astro";
 import tailwindcss from "@tailwindcss/vite";
-
-// https://astro.build/config
-import svelte from "@astrojs/svelte";
 
 // https://astro.build/config
 export default defineConfig({
   output: "server",
   adapter: vercel(),
   integrations: [
-    tailwind({
-      config: {
-        applyBaseStyles: false,
-      },
-    }),
     svelte(),
     react(),
     sanity({
@@ -29,10 +22,16 @@ export default defineConfig({
       dataset: PUBLIC_SANITY_STUDIO_DATASET,
       useCdn: true,
       apiVersion: "2025-03-11",
-      studioBasePath: "/admin",
+      studioBasePath: "/studio",
       stega: {
-        studioUrl: "/admin",
+        studioUrl: "/studio",
       },
     }),
   ],
+  vite: {
+    plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ["@sanity/astro"],
+    },
+  },
 });

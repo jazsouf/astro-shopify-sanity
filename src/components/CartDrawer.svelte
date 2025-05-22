@@ -12,7 +12,7 @@
   import Money from "./Money.svelte";
   import { clickOutside } from "../utils/click-outside";
 
-  let cartDrawerEl: HTMLDivElement = $state();
+  let cartDrawerEl: HTMLDivElement | undefined = $state();
 
   // Add classes to cart line items if cart is updating
   let cartIsUpdatingClass = $derived($isCartUpdating
@@ -59,6 +59,7 @@
     <div class="fixed inset-0 overflow-hidden">
       <div class="absolute inset-0 overflow-hidden">
         <div
+          role="dialog"
           class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-6 focus:outline-none"
           tabindex="-1"
           use:clickOutside={() => closeCartDrawer()}
@@ -157,13 +158,14 @@
                               {item.merchandise.product.title}
                             </a>
                             <p class="text-xs">
-                              <Money price={item.cost.amountPerQuantity} />
-                            </p>
+                            <Money price={item.cost.amountPerQuantity} showCurrency={false} />
+                                                        </p>
                           </div>
                           <div
                             class="col-span-2 items-end flex justify-between flex-col"
                           >
                             <button
+                              aria-label="Remove item"
                               onclick={() => {
                                 removeItem(item.id);
                               }}
@@ -187,7 +189,7 @@
                             </button>
                             <div>
                               <p class="font-medium">
-                                <Money price={item.cost.totalAmount} />
+                                <Money price={item.cost.totalAmount} showCurrency={false} />
                               </p>
                             </div>
                           </div>

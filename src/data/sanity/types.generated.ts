@@ -155,6 +155,7 @@ export type EditorialSection = {
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
         };
+        media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         alt?: string;
@@ -277,6 +278,7 @@ export type BackgroundImage = {
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
   };
+  media?: unknown;
   hotspot?: SanityImageHotspot;
   crop?: SanityImageCrop;
   alt?: string;
@@ -411,6 +413,7 @@ export type PageSeo = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
     };
+    media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
@@ -495,6 +498,12 @@ export type ShopifyCollection = {
   sortOrder?: string;
 };
 
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
+};
+
 export type Settings = {
   _id: string;
   _type: "settings";
@@ -564,21 +573,6 @@ export type HslaColor = {
   a?: number;
 };
 
-export type MediaTag = {
-  _id: string;
-  _type: "media.tag";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: Slug;
-};
-
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
 export type AllSanitySchemaTypes =
   | SanityImagePaletteSwatch
   | SanityImagePalette
@@ -611,15 +605,14 @@ export type AllSanitySchemaTypes =
   | ShopifyProduct
   | Collection
   | ShopifyCollection
+  | Slug
   | Settings
   | Footer
   | Header
   | Color
   | RgbaColor
   | HsvaColor
-  | HslaColor
-  | MediaTag
-  | Slug;
+  | HslaColor;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/data/sanity/groq.ts
 // Variable: SETTINGS_QUERY
@@ -773,6 +766,7 @@ export type HOME_QUERYResult = {
         _weak?: boolean;
         [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
       };
+      media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       alt?: string;
@@ -878,6 +872,7 @@ export type MODULAR_PAGE_QUERYResult = {
         _weak?: boolean;
         [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
       };
+      media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       alt?: string;

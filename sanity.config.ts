@@ -5,18 +5,21 @@ import { schemaTypes } from "./src/sanity/schema-types";
 
 import { colorInput } from "@sanity/color-input";
 import { visionTool } from "@sanity/vision";
-import { media } from "sanity-plugin-media";
 
 import { customDocumentActions } from "./src/sanity/custom-document-action";
 import { resolve } from "./src/sanity/resolve";
 import { structure } from "./src/sanity/structure";
 import { singletonTypes } from "./src/sanity/structure/singletons";
+import { TrolleyIcon } from "@sanity/icons";
 
 const devPlugins = [visionTool({ title: "API" })];
 
 export default defineConfig({
-  projectId: process.env.PUBLIC_SANITY_STUDIO_PROJECT_ID || "",
-  dataset: process.env.PUBLIC_SANITY_STUDIO_DATASET || "production",
+  name: "astro-shopify-sanity",
+  title: "Astro Shopify Sanity",
+  icon: TrolleyIcon,
+  projectId: import.meta.env.PUBLIC_SANITY_STUDIO_PROJECT_ID || "",
+  dataset: import.meta.env.PUBLIC_SANITY_STUDIO_DATASET || "production",
   plugins: [
     structureTool({
       structure, // Custom studio structure configuration, imported from ./src/structure.ts
@@ -26,7 +29,6 @@ export default defineConfig({
       previewUrl: location.origin,
       resolve,
     }),
-    media(),
     colorInput(),
     customDocumentActions(),
     ...(isDev ? devPlugins : []),
