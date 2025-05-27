@@ -128,6 +128,12 @@ export type LinkInternal = {
         _ref: string;
         _type: "reference";
         _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "plp";
+      }
+    | {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
         [internalGroqTypeReferenceTo]?: "page";
       }
     | {
@@ -200,13 +206,13 @@ export type EditorialSection = {
                 _ref: string;
                 _type: "reference";
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "product";
+                [internalGroqTypeReferenceTo]?: "plp";
               }
             | {
                 _ref: string;
                 _type: "reference";
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "collection";
+                [internalGroqTypeReferenceTo]?: "product";
               };
           _type: "linkInternal";
           _key: string;
@@ -253,13 +259,13 @@ export type RichText = Array<{
               _ref: string;
               _type: "reference";
               _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: "product";
+              [internalGroqTypeReferenceTo]?: "plp";
             }
           | {
               _ref: string;
               _type: "reference";
               _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: "collection";
+              [internalGroqTypeReferenceTo]?: "product";
             };
         _type: "linkInternal";
         _key: string;
@@ -315,6 +321,43 @@ export type ShopifyProductVariant = {
   previewImageUrl?: string;
 };
 
+export type Collection = {
+  _id: string;
+  _type: "collection";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  hidden?: string;
+  titleProxy?: ProxyString;
+  slugProxy?: ProxyString;
+  pageBuilder?: Array<
+    {
+      _key: string;
+    } & EditorialSection
+  >;
+  store?: ShopifyCollection;
+};
+
+export type ShopifyCollection = {
+  _type: "shopifyCollection";
+  createdAt?: string;
+  updatedAt?: string;
+  isDeleted?: boolean;
+  title?: string;
+  id?: number;
+  gid?: string;
+  slug?: Slug;
+  descriptionHtml?: string;
+  imageUrl?: string;
+  rules?: Array<
+    {
+      _key: string;
+    } & CollectionRule
+  >;
+  disjunctive?: boolean;
+  sortOrder?: string;
+};
+
 export type Home = {
   _id: string;
   _type: "home";
@@ -342,6 +385,55 @@ export type Page = {
       _key: string;
     } & EditorialSection
   >;
+  pageSeo?: PageSeo;
+};
+
+export type Product = {
+  _id: string;
+  _type: "product";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  titleProxy?: ProxyString;
+  slugProxy?: ProxyString;
+  pageBuilder?: Array<
+    {
+      _key: string;
+    } & EditorialSection
+  >;
+  store?: ShopifyProduct;
+};
+
+export type ShopifyProduct = {
+  _type: "shopifyProduct";
+  createdAt?: string;
+  updatedAt?: string;
+  status?: "active" | "archived" | "draft";
+  isDeleted?: boolean;
+  title?: string;
+  id?: number;
+  gid?: string;
+  slug?: Slug;
+  descriptionHtml?: string;
+  productType?: string;
+  vendor?: string;
+  collections?: string;
+  tags?: string;
+  priceRange?: PriceRange;
+  previewImageUrl?: string;
+  options?: Array<
+    {
+      _key: string;
+    } & Option
+  >;
+};
+
+export type Plp = {
+  _id: string;
+  _type: "plp";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
   pageSeo?: PageSeo;
 };
 
@@ -419,83 +511,6 @@ export type PageSeo = {
     alt?: string;
     _type: "image";
   };
-};
-
-export type Product = {
-  _id: string;
-  _type: "product";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  titleProxy?: ProxyString;
-  slugProxy?: ProxyString;
-  pageBuilder?: Array<
-    {
-      _key: string;
-    } & EditorialSection
-  >;
-  store?: ShopifyProduct;
-};
-
-export type ShopifyProduct = {
-  _type: "shopifyProduct";
-  createdAt?: string;
-  updatedAt?: string;
-  status?: "active" | "archived" | "draft";
-  isDeleted?: boolean;
-  title?: string;
-  id?: number;
-  gid?: string;
-  slug?: Slug;
-  descriptionHtml?: string;
-  productType?: string;
-  vendor?: string;
-  collections?: string;
-  tags?: string;
-  priceRange?: PriceRange;
-  previewImageUrl?: string;
-  options?: Array<
-    {
-      _key: string;
-    } & Option
-  >;
-};
-
-export type Collection = {
-  _id: string;
-  _type: "collection";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  hidden?: string;
-  titleProxy?: ProxyString;
-  slugProxy?: ProxyString;
-  pageBuilder?: Array<
-    {
-      _key: string;
-    } & EditorialSection
-  >;
-  store?: ShopifyCollection;
-};
-
-export type ShopifyCollection = {
-  _type: "shopifyCollection";
-  createdAt?: string;
-  updatedAt?: string;
-  isDeleted?: boolean;
-  title?: string;
-  id?: number;
-  gid?: string;
-  slug?: Slug;
-  descriptionHtml?: string;
-  imageUrl?: string;
-  rules?: Array<
-    {
-      _key: string;
-    } & CollectionRule
-  >;
-  disjunctive?: boolean;
-  sortOrder?: string;
 };
 
 export type Slug = {
@@ -593,18 +608,19 @@ export type AllSanitySchemaTypes =
   | BackgroundImage
   | ProductVariant
   | ShopifyProductVariant
+  | Collection
+  | ShopifyCollection
   | Home
   | Page
+  | Product
+  | ShopifyProduct
+  | Plp
   | SanityImageCrop
   | SanityImageHotspot
   | SanityImageAsset
   | SanityAssetSourceData
   | SanityImageMetadata
   | PageSeo
-  | Product
-  | ShopifyProduct
-  | Collection
-  | ShopifyCollection
   | Slug
   | Settings
   | Footer
@@ -669,7 +685,7 @@ export type SETTINGS_QUERYResult = {
   };
 } | null;
 // Variable: HOME_QUERY
-// Query: *[_type == 'home' ][0]{    _type,    _id,    _updatedAt,    _createdAt,    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": "Home",    "slug": "/",    "pageBuilder": pageBuilder[]{        _key,  _type,  "cover": cover[] {    _type,    "backgroundImage": select(_type == "backgroundImage" => {      asset,      crop,      hotspot,      alt,    }),    "color": select(_type == "color" => hex)  },  content,  "textColor": coalesce(textColor.hex, 'black'),    },    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
+// Query: *[_type == 'home' ][0]{    _type,    _id,    _updatedAt,    _createdAt,    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": "Home",    "slug": "/",    "pageBuilder": pageBuilder[]{        _key,  _type,  "cover": cover[] {    _type,    "backgroundImage": select(_type == "backgroundImage" => {      asset,      crop,      hotspot,      alt,    }),    "color": select(_type == "color" => hex)  },  "content": content[]{    ...,    markDefs[]{      ...,      "url": select(      _type == 'linkInternal' => select(reference->._type == 'product' => '/products/' + reference->store.slug.current,        reference->.type == 'home' => '/',        reference->.type == 'page' => reference->.slug.current,        reference->.type == 'plp' => '/products',      ),      _type == 'linkExternal' => url,      )},    },  "textColor": coalesce(textColor.hex, 'black'),    },    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
 export type HOME_QUERYResult = {
   _type: "home";
   _id: string;
@@ -712,7 +728,7 @@ export type HOME_QUERYResult = {
       }>;
       style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
       listItem?: "bullet";
-      markDefs?: Array<
+      markDefs: Array<
         | {
             url: string;
             newTab?: boolean;
@@ -721,12 +737,6 @@ export type HOME_QUERYResult = {
           }
         | {
             reference:
-              | {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "collection";
-                }
               | {
                   _ref: string;
                   _type: "reference";
@@ -743,12 +753,19 @@ export type HOME_QUERYResult = {
                   _ref: string;
                   _type: "reference";
                   _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "plp";
+                }
+              | {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
                   [internalGroqTypeReferenceTo]?: "product";
                 };
             _type: "linkInternal";
             _key: string;
+            url: string | null;
           }
-      >;
+      > | null;
       level?: number;
       _type: "block";
       _key: string;
@@ -775,7 +792,7 @@ export type HOME_QUERYResult = {
   } | null;
 } | null;
 // Variable: MODULAR_PAGE_QUERY
-// Query: *[_type == 'page' && slug.current == $slug][0]{    _type,    _id,    _updatedAt,    _createdAt,    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": coalesce(name, "Untitled Page"),    "slug": slug.current,    "pageBuilder": pageBuilder[]{        _key,  _type,  "cover": cover[] {    _type,    "backgroundImage": select(_type == "backgroundImage" => {      asset,      crop,      hotspot,      alt,    }),    "color": select(_type == "color" => hex)  },  content,  "textColor": coalesce(textColor.hex, 'black'),    },    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
+// Query: *[_type == 'page' && slug.current == $slug][0]{    _type,    _id,    _updatedAt,    _createdAt,    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": coalesce(name, "Untitled Page"),    "slug": slug.current,    "pageBuilder": pageBuilder[]{        _key,  _type,  "cover": cover[] {    _type,    "backgroundImage": select(_type == "backgroundImage" => {      asset,      crop,      hotspot,      alt,    }),    "color": select(_type == "color" => hex)  },  "content": content[]{    ...,    markDefs[]{      ...,      "url": select(      _type == 'linkInternal' => select(reference->._type == 'product' => '/products/' + reference->store.slug.current,        reference->.type == 'home' => '/',        reference->.type == 'page' => reference->.slug.current,        reference->.type == 'plp' => '/products',      ),      _type == 'linkExternal' => url,      )},    },  "textColor": coalesce(textColor.hex, 'black'),    },    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
 export type MODULAR_PAGE_QUERYResult = {
   _type: "page";
   _id: string;
@@ -818,7 +835,7 @@ export type MODULAR_PAGE_QUERYResult = {
       }>;
       style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
       listItem?: "bullet";
-      markDefs?: Array<
+      markDefs: Array<
         | {
             url: string;
             newTab?: boolean;
@@ -827,12 +844,6 @@ export type MODULAR_PAGE_QUERYResult = {
           }
         | {
             reference:
-              | {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "collection";
-                }
               | {
                   _ref: string;
                   _type: "reference";
@@ -849,12 +860,19 @@ export type MODULAR_PAGE_QUERYResult = {
                   _ref: string;
                   _type: "reference";
                   _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "plp";
+                }
+              | {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
                   [internalGroqTypeReferenceTo]?: "product";
                 };
             _type: "linkInternal";
             _key: string;
+            url: string | null;
           }
-      >;
+      > | null;
       level?: number;
       _type: "block";
       _key: string;
@@ -881,7 +899,7 @@ export type MODULAR_PAGE_QUERYResult = {
   } | null;
 } | null;
 // Variable: COLLECTION_QUERY
-// Query: *[_type == 'collection' && slug.current == $slug][0]{    _type,    _id,    _updatedAt,    _createdAt,    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": coalesce(name, "Untitled Collection"),    "slug": slug.current,    "editorial": {      "_type":'page',      _id,      _updatedAt,      _createdAt,      "status": select(_id in path("drafts.**") => "draft", "published"),      "name": coalesce(name, "Untitled Page"),      "slug": store.slug.current,      pageBuilder[]{          _key,  _type,  "cover": cover[] {    _type,    "backgroundImage": select(_type == "backgroundImage" => {      asset,      crop,      hotspot,      alt,    }),    "color": select(_type == "color" => hex)  },  content,  "textColor": coalesce(textColor.hex, 'black'),      },    },    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
+// Query: *[_type == 'collection' && slug.current == $slug][0]{    _type,    _id,    _updatedAt,    _createdAt,    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": coalesce(name, "Untitled Collection"),    "slug": slug.current,    "editorial": {      "_type":'page',      _id,      _updatedAt,      _createdAt,      "status": select(_id in path("drafts.**") => "draft", "published"),      "name": coalesce(name, "Untitled Page"),      "slug": store.slug.current,      pageBuilder[]{          _key,  _type,  "cover": cover[] {    _type,    "backgroundImage": select(_type == "backgroundImage" => {      asset,      crop,      hotspot,      alt,    }),    "color": select(_type == "color" => hex)  },  "content": content[]{    ...,    markDefs[]{      ...,      "url": select(      _type == 'linkInternal' => select(reference->._type == 'product' => '/products/' + reference->store.slug.current,        reference->.type == 'home' => '/',        reference->.type == 'page' => reference->.slug.current,        reference->.type == 'plp' => '/products',      ),      _type == 'linkExternal' => url,      )},    },  "textColor": coalesce(textColor.hex, 'black'),      },    },    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
 export type COLLECTION_QUERYResult = {
   _type: "collection";
   _id: string;
@@ -932,7 +950,7 @@ export type COLLECTION_QUERYResult = {
         }>;
         style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
         listItem?: "bullet";
-        markDefs?: Array<
+        markDefs: Array<
           | {
               url: string;
               newTab?: boolean;
@@ -941,12 +959,6 @@ export type COLLECTION_QUERYResult = {
             }
           | {
               reference:
-                | {
-                    _ref: string;
-                    _type: "reference";
-                    _weak?: boolean;
-                    [internalGroqTypeReferenceTo]?: "collection";
-                  }
                 | {
                     _ref: string;
                     _type: "reference";
@@ -963,12 +975,19 @@ export type COLLECTION_QUERYResult = {
                     _ref: string;
                     _type: "reference";
                     _weak?: boolean;
+                    [internalGroqTypeReferenceTo]?: "plp";
+                  }
+                | {
+                    _ref: string;
+                    _type: "reference";
+                    _weak?: boolean;
                     [internalGroqTypeReferenceTo]?: "product";
                   };
               _type: "linkInternal";
               _key: string;
+              url: string | null;
             }
-        >;
+        > | null;
         level?: number;
         _type: "block";
         _key: string;
@@ -1031,7 +1050,7 @@ export type MORE_PRODUCTS_QUERYResult = Array<{
   store?: ShopifyProduct;
 }>;
 // Variable: PRODUCT_QUERY
-// Query: *[_type == "product" && store.slug.current == $slug] [0] {    _type,    _id,    _updatedAt,    _createdAt,    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": coalesce(name, "Untitled Page"),    "slug": store.slug.current,    pageBuilder[]{        _key,  _type,  "cover": cover[] {    _type,    "backgroundImage": select(_type == "backgroundImage" => {      asset,      crop,      hotspot,      alt,    }),    "color": select(_type == "color" => hex)  },  content,  "textColor": coalesce(textColor.hex, 'black'),    },    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
+// Query: *[_type == "product" && store.slug.current == $slug] [0] {    _type,    _id,    _updatedAt,    _createdAt,    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": coalesce(name, "Untitled Page"),    "slug": store.slug.current,    pageBuilder[]{        _key,  _type,  "cover": cover[] {    _type,    "backgroundImage": select(_type == "backgroundImage" => {      asset,      crop,      hotspot,      alt,    }),    "color": select(_type == "color" => hex)  },  "content": content[]{    ...,    markDefs[]{      ...,      "url": select(      _type == 'linkInternal' => select(reference->._type == 'product' => '/products/' + reference->store.slug.current,        reference->.type == 'home' => '/',        reference->.type == 'page' => reference->.slug.current,        reference->.type == 'plp' => '/products',      ),      _type == 'linkExternal' => url,      )},    },  "textColor": coalesce(textColor.hex, 'black'),    },    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
 export type PRODUCT_QUERYResult = {
   _type: "product";
   _id: string;
@@ -1074,7 +1093,7 @@ export type PRODUCT_QUERYResult = {
       }>;
       style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
       listItem?: "bullet";
-      markDefs?: Array<
+      markDefs: Array<
         | {
             url: string;
             newTab?: boolean;
@@ -1083,12 +1102,6 @@ export type PRODUCT_QUERYResult = {
           }
         | {
             reference:
-              | {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "collection";
-                }
               | {
                   _ref: string;
                   _type: "reference";
@@ -1105,12 +1118,19 @@ export type PRODUCT_QUERYResult = {
                   _ref: string;
                   _type: "reference";
                   _weak?: boolean;
+                  [internalGroqTypeReferenceTo]?: "plp";
+                }
+              | {
+                  _ref: string;
+                  _type: "reference";
+                  _weak?: boolean;
                   [internalGroqTypeReferenceTo]?: "product";
                 };
             _type: "linkInternal";
             _key: string;
+            url: string | null;
           }
-      >;
+      > | null;
       level?: number;
       _type: "block";
       _key: string;
@@ -1142,13 +1162,13 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "\n  *[_type == \"settings\"][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    \"title\": coalesce(title, \"Untitled Store\"),\n    metadataBase,\n    header{\n      _type,\n      announcementBar{\n        _type,\n        content,\n        \"link\": links[0]{\n  _type,\n  _key,\n  linkType,\n  \"url\": select(\n    linkType == 'href' => href,\n    linkType == 'home' => '/',\n    linkType == 'plp' => '/products',\n    linkType == 'page' => '/' + page->slug.current,\n    linkType == 'product' => '/products/' + product->store.slug.current,\n    linkType == 'collection' => '/collections/' + collection->store.slug.current,\n  ),\n  \"label\": select(\n      label.length > 0 => label,\n      linkType == 'home' => 'Home',\n      linkType == 'plp' => 'All Products',\n      linkType == 'page' => page->name,\n      linkType == 'product' => product->store.title,\n      linkType == 'collection' => collection->store.title,\n      \"Link\"\n    ),\n  openInNewTab\n}\n      },\n      \"links\": links[]{\n  _type,\n  _key,\n  linkType,\n  \"url\": select(\n    linkType == 'href' => href,\n    linkType == 'home' => '/',\n    linkType == 'plp' => '/products',\n    linkType == 'page' => '/' + page->slug.current,\n    linkType == 'product' => '/products/' + product->store.slug.current,\n    linkType == 'collection' => '/collections/' + collection->store.slug.current,\n  ),\n  \"label\": select(\n      label.length > 0 => label,\n      linkType == 'home' => 'Home',\n      linkType == 'plp' => 'All Products',\n      linkType == 'page' => page->name,\n      linkType == 'product' => product->store.title,\n      linkType == 'collection' => collection->store.title,\n      \"Link\"\n    ),\n  openInNewTab\n}\n    },\n    footer{\n      _type,\n      \"links\": links[]{\n  _type,\n  _key,\n  linkType,\n  \"url\": select(\n    linkType == 'href' => href,\n    linkType == 'home' => '/',\n    linkType == 'plp' => '/products',\n    linkType == 'page' => '/' + page->slug.current,\n    linkType == 'product' => '/products/' + product->store.slug.current,\n    linkType == 'collection' => '/collections/' + collection->store.slug.current,\n  ),\n  \"label\": select(\n      label.length > 0 => label,\n      linkType == 'home' => 'Home',\n      linkType == 'plp' => 'All Products',\n      linkType == 'page' => page->name,\n      linkType == 'product' => product->store.title,\n      linkType == 'collection' => collection->store.title,\n      \"Link\"\n    ),\n  openInNewTab\n}\n    },\n  }": SETTINGS_QUERYResult;
-    '\n  *[_type == \'home\' ][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": "Home",\n    "slug": "/",\n    "pageBuilder": pageBuilder[]{\n      \n  _key,\n  _type,\n  "cover": cover[] {\n    _type,\n    "backgroundImage": select(_type == "backgroundImage" => {\n      asset,\n      crop,\n      hotspot,\n      alt,\n    }),\n    "color": select(_type == "color" => hex)\n  },\n  content,\n  "textColor": coalesce(textColor.hex, \'black\'),\n\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': HOME_QUERYResult;
-    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": coalesce(name, "Untitled Page"),\n    "slug": slug.current,\n    "pageBuilder": pageBuilder[]{\n      \n  _key,\n  _type,\n  "cover": cover[] {\n    _type,\n    "backgroundImage": select(_type == "backgroundImage" => {\n      asset,\n      crop,\n      hotspot,\n      alt,\n    }),\n    "color": select(_type == "color" => hex)\n  },\n  content,\n  "textColor": coalesce(textColor.hex, \'black\'),\n\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': MODULAR_PAGE_QUERYResult;
-    '\n  *[_type == \'collection\' && slug.current == $slug][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": coalesce(name, "Untitled Collection"),\n    "slug": slug.current,\n    "editorial": {\n      "_type":\'page\',\n      _id,\n      _updatedAt,\n      _createdAt,\n      "status": select(_id in path("drafts.**") => "draft", "published"),\n      "name": coalesce(name, "Untitled Page"),\n      "slug": store.slug.current,\n      pageBuilder[]{\n        \n  _key,\n  _type,\n  "cover": cover[] {\n    _type,\n    "backgroundImage": select(_type == "backgroundImage" => {\n      asset,\n      crop,\n      hotspot,\n      alt,\n    }),\n    "color": select(_type == "color" => hex)\n  },\n  content,\n  "textColor": coalesce(textColor.hex, \'black\'),\n\n      },\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': COLLECTION_QUERYResult;
+    '\n  *[_type == \'home\' ][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": "Home",\n    "slug": "/",\n    "pageBuilder": pageBuilder[]{\n      \n  _key,\n  _type,\n  "cover": cover[] {\n    _type,\n    "backgroundImage": select(_type == "backgroundImage" => {\n      asset,\n      crop,\n      hotspot,\n      alt,\n    }),\n    "color": select(_type == "color" => hex)\n  },\n  "content": content[]{\n    ...,\n    markDefs[]{\n      ...,\n      "url": select(\n      _type == \'linkInternal\' => select(reference->._type == \'product\' => \'/products/\' + reference->store.slug.current,\n        reference->.type == \'home\' => \'/\',\n        reference->.type == \'page\' => reference->.slug.current,\n        reference->.type == \'plp\' => \'/products\',\n      ),\n      _type == \'linkExternal\' => url,\n      )},\n    },\n  "textColor": coalesce(textColor.hex, \'black\'),\n\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': HOME_QUERYResult;
+    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": coalesce(name, "Untitled Page"),\n    "slug": slug.current,\n    "pageBuilder": pageBuilder[]{\n      \n  _key,\n  _type,\n  "cover": cover[] {\n    _type,\n    "backgroundImage": select(_type == "backgroundImage" => {\n      asset,\n      crop,\n      hotspot,\n      alt,\n    }),\n    "color": select(_type == "color" => hex)\n  },\n  "content": content[]{\n    ...,\n    markDefs[]{\n      ...,\n      "url": select(\n      _type == \'linkInternal\' => select(reference->._type == \'product\' => \'/products/\' + reference->store.slug.current,\n        reference->.type == \'home\' => \'/\',\n        reference->.type == \'page\' => reference->.slug.current,\n        reference->.type == \'plp\' => \'/products\',\n      ),\n      _type == \'linkExternal\' => url,\n      )},\n    },\n  "textColor": coalesce(textColor.hex, \'black\'),\n\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': MODULAR_PAGE_QUERYResult;
+    '\n  *[_type == \'collection\' && slug.current == $slug][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": coalesce(name, "Untitled Collection"),\n    "slug": slug.current,\n    "editorial": {\n      "_type":\'page\',\n      _id,\n      _updatedAt,\n      _createdAt,\n      "status": select(_id in path("drafts.**") => "draft", "published"),\n      "name": coalesce(name, "Untitled Page"),\n      "slug": store.slug.current,\n      pageBuilder[]{\n        \n  _key,\n  _type,\n  "cover": cover[] {\n    _type,\n    "backgroundImage": select(_type == "backgroundImage" => {\n      asset,\n      crop,\n      hotspot,\n      alt,\n    }),\n    "color": select(_type == "color" => hex)\n  },\n  "content": content[]{\n    ...,\n    markDefs[]{\n      ...,\n      "url": select(\n      _type == \'linkInternal\' => select(reference->._type == \'product\' => \'/products/\' + reference->store.slug.current,\n        reference->.type == \'home\' => \'/\',\n        reference->.type == \'page\' => reference->.slug.current,\n        reference->.type == \'plp\' => \'/products\',\n      ),\n      _type == \'linkExternal\' => url,\n      )},\n    },\n  "textColor": coalesce(textColor.hex, \'black\'),\n\n      },\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': COLLECTION_QUERYResult;
     '\n  *[_type == "collection" && defined(store.slug.current)] | order(date desc, _updatedAt desc) {\n    ...,\n  }\n': ALL_COLLECTIONS_QUERYResult;
     '\n  *[_type == "product" && defined(store.slug.current)] | order(date desc, _updatedAt desc) {\n    ...,\n  }\n': ALL_PRODUCTS_QUERYResult;
     '\n  *[_type == "product" && _id != $skip && defined(store.slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    ...,\n  }\n': MORE_PRODUCTS_QUERYResult;
-    '\n  *[_type == "product" && store.slug.current == $slug] [0] {\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": coalesce(name, "Untitled Page"),\n    "slug": store.slug.current,\n    pageBuilder[]{\n      \n  _key,\n  _type,\n  "cover": cover[] {\n    _type,\n    "backgroundImage": select(_type == "backgroundImage" => {\n      asset,\n      crop,\n      hotspot,\n      alt,\n    }),\n    "color": select(_type == "color" => hex)\n  },\n  content,\n  "textColor": coalesce(textColor.hex, \'black\'),\n\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': PRODUCT_QUERYResult;
+    '\n  *[_type == "product" && store.slug.current == $slug] [0] {\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": coalesce(name, "Untitled Page"),\n    "slug": store.slug.current,\n    pageBuilder[]{\n      \n  _key,\n  _type,\n  "cover": cover[] {\n    _type,\n    "backgroundImage": select(_type == "backgroundImage" => {\n      asset,\n      crop,\n      hotspot,\n      alt,\n    }),\n    "color": select(_type == "color" => hex)\n  },\n  "content": content[]{\n    ...,\n    markDefs[]{\n      ...,\n      "url": select(\n      _type == \'linkInternal\' => select(reference->._type == \'product\' => \'/products/\' + reference->store.slug.current,\n        reference->.type == \'home\' => \'/\',\n        reference->.type == \'page\' => reference->.slug.current,\n        reference->.type == \'plp\' => \'/products\',\n      ),\n      _type == \'linkExternal\' => url,\n      )},\n    },\n  "textColor": coalesce(textColor.hex, \'black\'),\n\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': PRODUCT_QUERYResult;
     '\n  *[_type == "product" && store.slug.current == $slug] [0] {\n    _type,\n    _id,\n    store\n  }\n': PRODUCT_METADATA_QUERYResult;
     '\n  *[_type == "product" && defined(store.slug.current)]\n  {"slug": store.slug.current}\n': ALL_PRODUCT_PAGES_SLUGSResult;
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': ALL_PAGES_SLUGSResult;

@@ -1,6 +1,9 @@
 ---
 import { PortableText as PortableTextInternal } from "astro-portabletext";
 import type { PortableTextProps } from "astro-portabletext/types";
+import { List } from "astro-portabletext/components";
+import RichTextLinkInternal from "./RichTextLinkInternal.astro";
+import RichTextLinkExternal from "./RichTextLinkExternal.astro";
 
 interface Props {
   content: PortableTextProps["value"];
@@ -8,11 +11,13 @@ interface Props {
 
 const { content } = Astro.props;
 
-// const components = {
-//   type: {
-//     image: PortableTextImage,
-//   },
-// };
+const components = {
+  list: List,
+  mark: {
+    linkInternal: RichTextLinkInternal,
+    linkExternal: RichTextLinkExternal,
+  },
+};
 ---
 
-<PortableTextInternal value={content} />
+<PortableTextInternal value={content} components={components} />

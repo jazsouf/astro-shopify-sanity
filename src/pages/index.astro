@@ -1,17 +1,25 @@
 ---
-import { getProducts } from "./../data/shopify";
+import { getHomePage } from "../data/sanity";
+import type { HOME_QUERYResult } from "../data/sanity/types.generated";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Products from "../components/Products.astro";
+import PageBuilder from "../components/PageBuilder.astro";
+
 import { setCache } from "../utils/cache";
 
-const title = "Astro + Shopify";
-const headers = Astro.request.headers;
-const ip = headers.get("x-vercel-forwarded-for") || Astro.clientAddress;
-const products = await getProducts({ buyerIP: ip });
+const defaultTitle = "Astro + Shopify";
+
+const homePage: HOME_QUERYResult = (await getHomePage()).data;
+
+if (!homePage) {
+  Astro.redirect("/404");
+}
+
+const title = homePage?.pageSeo?.title || defaultTitle;
+const pageBuilder = homePage?.pageBuilder;
 
 setCache.short(Astro);
 ---
 
-<BaseLayout title={title}>
-  <Products products={products} />
-</BaseLayout>
+<BaseLayout title={title}
+  >{pageBuilder && <PageBuilder {pageBuilder} />}</BaseLayout
+>

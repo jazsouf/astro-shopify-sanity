@@ -1,0 +1,19 @@
+---
+interface Props {
+  node: {
+    markDef: {
+      newTab: boolean;
+      url: string;
+    };
+  };
+}
+
+const { node } = Astro.props;
+---
+
+<style>
+  a {
+    text-decoration: underline;
+  }
+</style>
+<a href={node.markDef.url}><slot /></a>

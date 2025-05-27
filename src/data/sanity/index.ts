@@ -9,7 +9,7 @@ import { sanityFetch } from "./sanity-fetch";
 
 export async function getModularPage(pathname: string) {
   return sanityFetch<any>({
-    params: { pathname },
+    params: { slug: pathname },
     query: MODULAR_PAGE_QUERY,
   });
 }

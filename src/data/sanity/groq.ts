@@ -20,7 +20,19 @@ const pageBuilderFields = /* groq */ `
     }),
     "color": select(_type == "color" => hex)
   },
-  content,
+  "content": content[]{
+    ...,
+    markDefs[]{
+      ...,
+      "url": select(
+      _type == 'linkInternal' => select(reference->._type == 'product' => '/products/' + reference->store.slug.current,
+        reference->._type == 'home' => '/',
+        reference->._type == 'page' => '/' + reference->.slug.current,
+        reference->._type == 'plp' => '/products',
+      ),
+      _type == 'linkExternal' => url,
+      )},
+    },
   "textColor": coalesce(textColor.hex, 'black'),
 `;
 

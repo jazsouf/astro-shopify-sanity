@@ -19,15 +19,16 @@
   },
   "dependencies": {
     "@astrojs/check": "0.9.4",
+    "@astrojs/netlify": "^6.3.4",
     "@astrojs/react": "^4.3.0",
     "@astrojs/svelte": "^7.1.0",
     "@astrojs/tailwind": "^6.0.2",
-    "@astrojs/netlify": "^6.3.4",
     "@nanostores/persistent": "^1.0.0",
     "@sanity/astro": "^3.2.6",
     "@sanity/client": "^7.3.0",
     "@sanity/color-input": "^4.0.3",
     "@sanity/icons": "^3.7.0",
+    "@sanity/image-url": "^1.1.0",
     "@sanity/ui": "^2.15.18",
     "@sanity/vision": "^3.89.0",
     "@shopify/hydrogen-react": "^2025.5.0",
@@ -44,12 +45,12 @@
     "sanity": "^3.89.0",
     "slug": "^10.0.0",
     "styled-components": "^6.1.18",
-    "svelte": "^5.32.1",
+    "svelte": "^5.33.3",
     "vite": "^6.3.5",
-    "zod": "^3.25.20"
+    "zod": "^3.25.30"
   },
   "devDependencies": {
-    "@types/react": "^19.1.5",
+    "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "@types/slug": "^5.0.9",
     "npm-run-all": "^4.1.5",

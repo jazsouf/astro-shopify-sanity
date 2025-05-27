@@ -80,8 +80,8 @@ export const richText = defineType({
                 to: [
                   { type: "home" },
                   { type: "page" },
+                  { type: "plp" },
                   { type: "product" },
-                  { type: "collection" },
                 ],
                 validation: (Rule) => Rule.required(),
               }),

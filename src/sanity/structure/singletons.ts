@@ -19,6 +19,12 @@ export const SINGLETONS: {
     title: "Home",
     icon: HomeIcon,
   },
+  plp: {
+    id: "plp",
+    _type: "plp",
+    title: "PLP",
+    icon: CogIcon,
+  },
   settings: {
     id: "settings",
     _type: "settings",

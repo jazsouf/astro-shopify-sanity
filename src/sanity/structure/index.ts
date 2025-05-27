@@ -19,6 +19,7 @@ export const structure: StructureResolver = (S, _) =>
       S.documentTypeListItem("collection").title("Collections").icon(CubeIcon),
       S.documentTypeListItem("product").title("Products").icon(AsteriskIcon),
       S.divider(),
+      singletonListItem(S, SINGLETONS.plp),
       // Settings Singleton in order to view/edit the one particular document for Settings.  Learn more about Singletons: https://www.sanity.io/docs/create-a-link-to-a-single-edit-page-in-your-main-document-type-list
       singletonListItem(S, SINGLETONS.settings),
     ]);

@@ -10,6 +10,7 @@ export const DEFAULT_CURRENCY_CODE = "EUR";
 
 export const PAGE_REFERENCES = [
   { type: "home" },
+  { type: "plp" },
   { type: "page" },
   { type: "product" },
 ];
