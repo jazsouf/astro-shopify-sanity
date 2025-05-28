@@ -15,15 +15,26 @@ const { images, variants = [] } = Astro.props as Props;
 
 // Get the current variant from URL params or default to first variant
 const url = new URL(Astro.request.url);
-const selectedVariantId = url.searchParams.get('variant') || variants[0]?.id;
-const selectedVariant = variants.find(v => v.id === selectedVariantId) || variants[0];
+const selectedVariantId = url.searchParams.get("variant") || variants[0]?.id;
+const selectedVariant =
+  variants.find((v) => v.id === selectedVariantId) || variants[0];
 
 // Use variant image if available, otherwise fall back to product images
 const displayImage = selectedVariant?.image || images.nodes[0];
 ---
 
-<div class="grid gap-4 md:grid-cols-8 lg:gap-6" 
-     data-variant-images={JSON.stringify(variants.map(v => ({ id: v.id, image: v.image })))}>
+<div
+  class="grid gap-4 md:grid-cols-8 lg:gap-6"
+  data-variant-images={JSON.stringify(
+    variants.map((v) => ({ id: v.id, image: v.image })),
+  )}
+  data-image-variants={JSON.stringify(
+    images.nodes.map((img) => {
+      const variant = variants.find((v) => v.image?.url === img?.url);
+      return { imageUrl: img?.url, variantId: variant?.id || null };
+    }),
+  )}
+>
   <div class="md:order-2 md:col-span-6">
     <div id="main-product-image">
       <ShopifyImage
@@ -41,105 +52,167 @@ const displayImage = selectedVariant?.image || images.nodes[0];
       />
     </div>
   </div>
-  <div
-    class:list={[
-      "grid",
-      "grid-cols-4",
-      "gap-4",
-      "md:order-1",
-      "md:col-span-2",
-      "md:flex",
-      "md:flex-col",
-      "md:gap-6",
-      { "md:justify-between": images.nodes.length > 2 },
-    ]}
-    id="thumbnail-gallery"
-  >
-    {
-      images.nodes.map((image, index) => {
-        if (index < 3) {
-          return (
-            <div 
-              class="overflow-hidden rounded-lg cursor-pointer thumbnail-image"
-              data-image-url={image?.url}
-              data-image-alt={image?.altText}
-              data-image-width={image?.width}
-              data-image-height={image?.height}
-              onclick="window.selectGalleryImage(this)"
-            >
-              <ShopifyImage
-                classList=""
-                loading="eager"
-                image={image}
-                sizes={`
+  {
+    images.nodes.length > 1 && (
+      <div
+        class:list={[
+          "grid",
+          "grid-cols-4",
+          "gap-4",
+          "md:order-1",
+          "md:col-span-2",
+          "md:flex",
+          "md:flex-col",
+          "md:gap-6",
+          { "md:justify-between": images.nodes.length > 2 },
+        ]}
+        id="thumbnail-gallery"
+      >
+        {images.nodes.map((image, index) => {
+          if (index < 3) {
+            const relatedVariant = variants.find(
+              (v) => v.image?.url === image?.url,
+            );
+            const isSelectedVariantImage =
+              selectedVariant?.image?.url === image?.url;
+            return (
+              <div
+                class={`thumbnail-image cursor-pointer overflow-hidden rounded-lg transition-all duration-200 ${
+                  isSelectedVariantImage
+                    ? "ring-2 ring-emerald-900 ring-offset-2"
+                    : "hover:opacity-75"
+                }`}
+                data-image-url={image?.url}
+                data-image-alt={image?.altText}
+                data-image-width={image?.width}
+                data-image-height={image?.height}
+                data-variant-id={relatedVariant?.id || ""}
+                onclick="window.selectGalleryImage(this)"
+                title={
+                  relatedVariant ? `View ${relatedVariant.title}` : "View image"
+                }
+              >
+                <ShopifyImage
+                  classList=""
+                  loading="eager"
+                  image={image}
+                  sizes={`
                   (min-width: 1540px) 475px,
                   (min-width: 1280px) 389px,
                   304px
                 `}
-              />
-            </div>
-          );
-        }
-      })
-    }
-  </div>
+                />
+              </div>
+            );
+          }
+        })}
+      </div>
+    )
+  }
 </div>
 
 <script is:inline>
   // Function to select gallery image
-  window.selectGalleryImage = function(thumbnail) {
-    const mainImage = document.getElementById('main-product-image');
-    const imgElement = mainImage.querySelector('img');
-    
+  window.selectGalleryImage = function (thumbnail) {
+    const mainImage = document.getElementById("main-product-image");
+    const imgElement = mainImage.querySelector("img");
+
     if (imgElement && thumbnail.dataset.imageUrl) {
+      // Update main image immediately for visual feedback
       imgElement.src = thumbnail.dataset.imageUrl;
-      imgElement.alt = thumbnail.dataset.imageAlt || '';
+      imgElement.alt = thumbnail.dataset.imageAlt || "";
       imgElement.width = parseInt(thumbnail.dataset.imageWidth) || 0;
       imgElement.height = parseInt(thumbnail.dataset.imageHeight) || 0;
+
+      // Update thumbnail selection visual feedback
+      document.querySelectorAll(".thumbnail-image").forEach((thumb) => {
+        thumb.classList.remove("ring-2", "ring-emerald-900", "ring-offset-2");
+        thumb.classList.add("hover:opacity-75");
+      });
+      thumbnail.classList.add("ring-2", "ring-emerald-900", "ring-offset-2");
+      thumbnail.classList.remove("hover:opacity-75");
+
+      // Check if this image corresponds to a variant and select it
+      if (thumbnail.dataset.variantId) {
+        window.selectVariantByImage(thumbnail.dataset.variantId);
+      }
+    }
+  };
+
+  // Function to select variant by image (using variant ID directly)
+  window.selectVariantByImage = function (variantId) {
+    if (!variantId) return;
+
+    // Find and trigger the variant button
+    const variantButton = document.querySelector(
+      `[data-variant-id="${variantId}"]`,
+    );
+    if (variantButton && !variantButton.disabled) {
+      // Update URL and navigate to sync with server state
+      const url = new URL(window.location);
+      url.searchParams.set("variant", variantId);
+      window.location.href = url.toString();
     }
   };
 
   // Function to update gallery based on variant selection
-  window.updateGalleryForVariant = function(variantId) {
-    const gallery = document.querySelector('[data-variant-images]');
+  window.updateGalleryForVariant = function (variantId) {
+    const gallery = document.querySelector("[data-variant-images]");
     if (!gallery) return;
 
     try {
       const variantImages = JSON.parse(gallery.dataset.variantImages);
-      const variant = variantImages.find(v => v.id === variantId);
-      
+      const variant = variantImages.find((v) => v.id === variantId);
+
       if (variant && variant.image) {
-        const mainImage = document.getElementById('main-product-image');
-        const imgElement = mainImage.querySelector('img');
-        
+        const mainImage = document.getElementById("main-product-image");
+        const imgElement = mainImage.querySelector("img");
+
         if (imgElement) {
           imgElement.src = variant.image.url;
-          imgElement.alt = variant.image.altText || '';
+          imgElement.alt = variant.image.altText || "";
           imgElement.width = variant.image.width || 0;
           imgElement.height = variant.image.height || 0;
         }
       }
     } catch (e) {
-      console.error('Error updating gallery for variant:', e);
+      console.error("Error updating gallery for variant:", e);
     }
   };
 
   // Function to sync gallery with current URL state
-  window.syncGalleryWithUrl = function() {
+  // Sync gallery with current URL state
+  window.syncGalleryWithUrl = function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const variantId = urlParams.get('variant');
-    
+    const variantId = urlParams.get("variant");
+
     if (variantId) {
       window.updateGalleryForVariant(variantId);
+      window.updateThumbnailSelection(variantId);
     }
   };
 
+  // Function to update thumbnail selection based on variant
+  window.updateThumbnailSelection = function (variantId) {
+    // Find the thumbnail that matches this variant
+    const thumbnails = document.querySelectorAll(".thumbnail-image");
+    thumbnails.forEach((thumb) => {
+      thumb.classList.remove("ring-2", "ring-emerald-900", "ring-offset-2");
+      thumb.classList.add("hover:opacity-75");
+
+      if (thumb.dataset.variantId === variantId) {
+        thumb.classList.add("ring-2", "ring-emerald-900", "ring-offset-2");
+        thumb.classList.remove("hover:opacity-75");
+      }
+    });
+  };
+
   // Sync gallery on page load and browser navigation
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("DOMContentLoaded", function () {
     window.syncGalleryWithUrl();
   });
 
-  window.addEventListener('popstate', function() {
+  window.addEventListener("popstate", function () {
     window.syncGalleryWithUrl();
   });
 </script>
