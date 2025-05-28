@@ -67,7 +67,7 @@ const { pageBuilder } = Astro.props;
             />
           </div>
         )}
-        <div class="content">
+        <div class="content" style={{ color: `${block.textColor ?? "#000"}` }}>
           <RichText content={block?.content as PortableTextProps["value"]} />
         </div>
       </section>
