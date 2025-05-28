@@ -64,10 +64,16 @@ const selectedVariant =
 <script is:inline>
   window.selectVariant = function (button) {
     const variantId = button.dataset.variantId;
+    
+    // Update gallery image immediately for better UX
+    if (typeof window.updateGalleryForVariant === 'function') {
+      window.updateGalleryForVariant(variantId);
+    }
+    
+    // Update URL and navigate to sync with server state
     const url = new URL(window.location);
     url.searchParams.set("variant", variantId);
-    window.history.pushState({}, "", url);
-    window.location.reload();
+    window.location.href = url.toString();
   };
 </script>
 

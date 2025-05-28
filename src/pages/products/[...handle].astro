@@ -37,7 +37,7 @@ setCache.short(Astro);
       <section class="container">
         <div class="pt-6 pb-16 lg:grid lg:grid-cols-12 lg:gap-20">
           <div class="lg:col-span-7">
-            <ProductImageGallery images={product.images} />
+            <ProductImageGallery images={product.images} variants={product.variants.nodes} />
           </div>
 
           <div class="mt-8 lg:col-span-5 lg:mt-0">

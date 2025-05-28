@@ -1,6 +1,6 @@
 ---
 import { z } from "zod";
-import { ImageResult } from "../data/shopify/schemas";
+import { ImageResult, VariantResult } from "../data/shopify/schemas";
 import ShopifyImage from "./ShopifyImage.svelte";
 
 const ImagesResult = z.object({
@@ -9,25 +9,37 @@ const ImagesResult = z.object({
 
 export interface Props {
   images: z.infer<typeof ImagesResult>;
+  variants?: z.infer<typeof VariantResult>[];
 }
-const { images } = Astro.props as Props;
+const { images, variants = [] } = Astro.props as Props;
+
+// Get the current variant from URL params or default to first variant
+const url = new URL(Astro.request.url);
+const selectedVariantId = url.searchParams.get('variant') || variants[0]?.id;
+const selectedVariant = variants.find(v => v.id === selectedVariantId) || variants[0];
+
+// Use variant image if available, otherwise fall back to product images
+const displayImage = selectedVariant?.image || images.nodes[0];
 ---
 
-<div class="grid gap-4 md:grid-cols-8 lg:gap-6">
+<div class="grid gap-4 md:grid-cols-8 lg:gap-6" 
+     data-variant-images={JSON.stringify(variants.map(v => ({ id: v.id, image: v.image })))}>
   <div class="md:order-2 md:col-span-6">
-    <ShopifyImage
-      classList="overflow-hidden rounded-lg h-full object-cover"
-      loading="eager"
-      image={images.nodes[0]}
-      sizes={`
-          (min-width: 1540px) 475px,
-          (min-width: 1280px) 389px,
-          (min-width: 1040px) 304px,
-          (min-width: 780px) 720px,
-          (min-width: 680px) 592px,
-          calc(94.44vw - 31px)
-        `}
-    />
+    <div id="main-product-image">
+      <ShopifyImage
+        classList="overflow-hidden rounded-lg h-full object-cover"
+        loading="eager"
+        image={displayImage}
+        sizes={`
+            (min-width: 1540px) 475px,
+            (min-width: 1280px) 389px,
+            (min-width: 1040px) 304px,
+            (min-width: 780px) 720px,
+            (min-width: 680px) 592px,
+            calc(94.44vw - 31px)
+          `}
+      />
+    </div>
   </div>
   <div
     class:list={[
@@ -41,12 +53,20 @@ const { images } = Astro.props as Props;
       "md:gap-6",
       { "md:justify-between": images.nodes.length > 2 },
     ]}
+    id="thumbnail-gallery"
   >
     {
       images.nodes.map((image, index) => {
         if (index < 3) {
           return (
-            <div class="overflow-hidden rounded-lg">
+            <div 
+              class="overflow-hidden rounded-lg cursor-pointer thumbnail-image"
+              data-image-url={image?.url}
+              data-image-alt={image?.altText}
+              data-image-width={image?.width}
+              data-image-height={image?.height}
+              onclick="window.selectGalleryImage(this)"
+            >
               <ShopifyImage
                 classList=""
                 loading="eager"
@@ -64,3 +84,62 @@ const { images } = Astro.props as Props;
     }
   </div>
 </div>
+
+<script is:inline>
+  // Function to select gallery image
+  window.selectGalleryImage = function(thumbnail) {
+    const mainImage = document.getElementById('main-product-image');
+    const imgElement = mainImage.querySelector('img');
+    
+    if (imgElement && thumbnail.dataset.imageUrl) {
+      imgElement.src = thumbnail.dataset.imageUrl;
+      imgElement.alt = thumbnail.dataset.imageAlt || '';
+      imgElement.width = parseInt(thumbnail.dataset.imageWidth) || 0;
+      imgElement.height = parseInt(thumbnail.dataset.imageHeight) || 0;
+    }
+  };
+
+  // Function to update gallery based on variant selection
+  window.updateGalleryForVariant = function(variantId) {
+    const gallery = document.querySelector('[data-variant-images]');
+    if (!gallery) return;
+
+    try {
+      const variantImages = JSON.parse(gallery.dataset.variantImages);
+      const variant = variantImages.find(v => v.id === variantId);
+      
+      if (variant && variant.image) {
+        const mainImage = document.getElementById('main-product-image');
+        const imgElement = mainImage.querySelector('img');
+        
+        if (imgElement) {
+          imgElement.src = variant.image.url;
+          imgElement.alt = variant.image.altText || '';
+          imgElement.width = variant.image.width || 0;
+          imgElement.height = variant.image.height || 0;
+        }
+      }
+    } catch (e) {
+      console.error('Error updating gallery for variant:', e);
+    }
+  };
+
+  // Function to sync gallery with current URL state
+  window.syncGalleryWithUrl = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const variantId = urlParams.get('variant');
+    
+    if (variantId) {
+      window.updateGalleryForVariant(variantId);
+    }
+  };
+
+  // Sync gallery on page load and browser navigation
+  document.addEventListener('DOMContentLoaded', function() {
+    window.syncGalleryWithUrl();
+  });
+
+  window.addEventListener('popstate', function() {
+    window.syncGalleryWithUrl();
+  });
+</script>
