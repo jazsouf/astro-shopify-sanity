@@ -7,6 +7,7 @@
     isCartDrawerOpen,
     removeCartItems,
     isCartUpdating,
+    updateCartItem,
   } from "../stores/cart";
   import ShopifyImage from "./ShopifyImage.svelte";
   import Money from "./Money.svelte";
@@ -29,6 +30,14 @@
 
   function removeItem(id: string) {
     removeCartItems([id]);
+  }
+
+  function updateQuantity(lineId: string, newQuantity: number) {
+    if (newQuantity > 0) {
+      updateCartItem(lineId, newQuantity);
+    } else {
+      removeItem(lineId);
+    }
   }
 
   function closeCartDrawer() {
@@ -157,9 +166,43 @@
                             >
                               {item.merchandise.product.title}
                             </a>
+                            {#if item.merchandise.title !== "Default Title"}
+                              <p class="text-xs text-zinc-600">
+                                {item.merchandise.title}
+                              </p>
+                            {/if}
                             <p class="text-xs">
-                            <Money price={item.cost.amountPerQuantity} showCurrency={false} />
-                                                        </p>
+                              <Money price={item.cost.amountPerQuantity} showCurrency={false} />
+                            </p>
+                            
+                            <!-- Quantity Controls -->
+                            <div class="flex items-center gap-2 mt-2">
+                              <button
+                                onclick={() => updateQuantity(item.id, item.quantity - 1)}
+                                disabled={$isCartUpdating || item.quantity <= 1}
+                                class="w-8 h-8 rounded border border-zinc-300 flex items-center justify-center text-zinc-600 hover:bg-zinc-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                aria-label="Decrease quantity"
+                              >
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                                </svg>
+                              </button>
+                              
+                              <span class="min-w-[2rem] text-center text-sm font-medium">
+                                {item.quantity}
+                              </span>
+                              
+                              <button
+                                onclick={() => updateQuantity(item.id, item.quantity + 1)}
+                                disabled={$isCartUpdating}
+                                class="w-8 h-8 rounded border border-zinc-300 flex items-center justify-center text-zinc-600 hover:bg-zinc-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                aria-label="Increase quantity"
+                              >
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                              </button>
+                            </div>
                           </div>
                           <div
                             class="col-span-2 items-end flex justify-between flex-col"
@@ -171,6 +214,7 @@
                               }}
                               type="button"
                               disabled={$isCartUpdating}
+                              class="text-zinc-400 hover:text-zinc-600 disabled:opacity-50"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"

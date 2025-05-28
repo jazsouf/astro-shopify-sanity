@@ -31,7 +31,8 @@
   if (typeof window !== 'undefined') {
     // Listen for custom variant change events
     window.addEventListener('variantChanged', (event) => {
-      const { variantId: newVariantId } = event.detail;
+      const customEvent = event as CustomEvent<{ variantId: string }>;
+      const { variantId: newVariantId } = customEvent.detail;
       if (newVariantId && newVariantId !== selectedVariantId) {
         selectedVariantId = newVariantId;
       }

@@ -8,6 +8,7 @@ import {
   AddCartLinesMutation,
   GetCartQuery,
   RemoveCartLinesMutation,
+  UpdateCartLinesMutation,
   ProductRecommendationsQuery,
 } from "./graphql";
 
@@ -167,6 +168,25 @@ export const removeCartLines = async (id: string, lineIds: string[]) => {
   });
   const { cartLinesRemove } = data;
   const { cart } = cartLinesRemove;
+  const parsedCart = CartResult.parse(cart);
+
+  return parsedCart;
+};
+
+// Update a line item quantity in an existing cart and return the updated cart object
+export const updateCartLines = async (
+  cartId: string,
+  lineId: string,
+  quantity: number
+) => {
+  const data = await makeShopifyRequest(UpdateCartLinesMutation, {
+    cartId,
+    lineId,
+    quantity,
+  });
+  const { cartLinesUpdate } = data;
+  const { cart } = cartLinesUpdate;
+
   const parsedCart = CartResult.parse(cart);
 
   return parsedCart;
