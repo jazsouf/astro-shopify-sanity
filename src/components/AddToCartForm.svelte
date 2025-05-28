@@ -3,6 +3,7 @@
 
   import { addCartItem, isCartUpdating, cart } from "../stores/cart";
 
+
   interface Props {
     variantId: string;
     variantQuantityAvailable: number;

@@ -55,7 +55,7 @@ export default defineConfig({
         context: "client",
         access: "public",
       }),
-      PUBLIC_SANITY_VISUAL_EDITING_ENABLED: envField.boolean({
+      PUBLIC_SANITY_VISUAL_EDITING_ENABLED: envField.string({
         context: "client",
         access: "public",
       }),
@@ -80,6 +80,9 @@ export default defineConfig({
         access: "secret",
       }),
     },
+  },
+  devToolbar: {
+    enabled: false,
   },
   vite: {
     plugins: [tailwindcss()],

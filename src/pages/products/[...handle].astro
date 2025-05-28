@@ -35,7 +35,7 @@ setCache.short(Astro);
       </div>
 
       <section class="container">
-        <div class="pb-16 pt-6 lg:grid lg:grid-cols-12 lg:gap-20">
+        <div class="pt-6 pb-16 lg:grid lg:grid-cols-12 lg:gap-20">
           <div class="lg:col-span-7">
             <ProductImageGallery images={product.images} />
           </div>
@@ -43,12 +43,14 @@ setCache.short(Astro);
           <div class="mt-8 lg:col-span-5 lg:mt-0">
             <ProductInformations
               title={product.title}
+              variants={product.variants.nodes}
               price={firstVariant?.price}
             />
 
             <div>
               <AddToCartForm
                 client:load
+                variants={product.variants.nodes}
                 variantId={firstVariant?.id}
                 variantQuantityAvailable={firstVariant?.quantityAvailable}
                 variantAvailableForSale={firstVariant?.availableForSale}

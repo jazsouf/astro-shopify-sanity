@@ -1,9 +1,10 @@
 import { type QueryParams } from "sanity";
 import { sanityClient as client } from "sanity:client";
+import { SANITY_API_READ_TOKEN } from "astro:env/server";
+import { PUBLIC_SANITY_VISUAL_EDITING_ENABLED } from "astro:env/client";
 
-const visualEditingEnabled =
-  import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
-const token = import.meta.env.SANITY_API_READ_TOKEN;
+const visualEditingEnabled = PUBLIC_SANITY_VISUAL_EDITING_ENABLED === "true";
+const token = SANITY_API_READ_TOKEN;
 
 export async function sanityFetch<QueryResponse>({
   query,

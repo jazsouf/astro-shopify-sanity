@@ -67,6 +67,16 @@ fragment productFragment on Product {
       title
       availableForSale
       quantityAvailable
+      selectedOptions {
+        name
+        value
+      }
+      image {
+        url
+        width
+        height
+        altText
+      }
       price {
         amount
         currencyCode

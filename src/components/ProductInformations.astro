@@ -1,21 +1,75 @@
 ---
 import type { z } from "zod";
-import type { MoneyV2Result } from "../data/shopify/schemas";
+import type { MoneyV2Result, VariantResult } from "../data/shopify/schemas";
 import Money from "./Money.svelte";
 
 export interface Props {
   price?: z.infer<typeof MoneyV2Result>;
   title: string;
+  variants: z.infer<typeof VariantResult>[];
 }
-const { price, title } = Astro.props as Props;
+const { price, title, variants } = Astro.props as Props;
+
+// Get the current variant from URL params or default to first variant
+const url = new URL(Astro.request.url);
+const selectedVariantId = url.searchParams.get("variant") || variants[0]?.id;
+const selectedVariant =
+  variants.find((v) => v.id === selectedVariantId) || variants[0];
 ---
 
 <h1 class="text-2xl font-bold text-zinc-800 sm:text-4xl">
   {title}
 </h1>
 <p class="mt-4 text-3xl font-bold text-emerald-900">
-  <Money price={price} />
+  <Money price={selectedVariant?.price || price} />
 </p>
+
+<!-- Variant Selection -->
+{
+  variants.length > 1 && (
+    <div class="mt-6">
+      <h3 class="mb-3 text-sm font-medium text-zinc-700">Select Variant</h3>
+      <div class="flex flex-wrap gap-2">
+        {variants.map((variant) => (
+          <button
+            type="button"
+            class={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${
+              variant.id === selectedVariantId
+                ? "border-emerald-900 bg-emerald-900 text-white"
+                : variant.availableForSale
+                  ? "border-zinc-300 bg-white text-zinc-900 hover:bg-zinc-50"
+                  : "cursor-not-allowed border-zinc-200 bg-zinc-100 text-zinc-400"
+            }`}
+            disabled={!variant.availableForSale}
+            data-variant-id={variant.id}
+            onclick="window.selectVariant(this)"
+          >
+            {variant.title}
+          </button>
+        ))}
+      </div>
+
+      {selectedVariant && (
+        <div class="mt-3 text-sm text-zinc-600">
+          <span class="font-medium">Availability:</span>
+          {selectedVariant.availableForSale
+            ? `${selectedVariant.quantityAvailable} in stock`
+            : "Out of stock"}
+        </div>
+      )}
+    </div>
+  )
+}
+
+<script is:inline>
+  window.selectVariant = function (button) {
+    const variantId = button.dataset.variantId;
+    const url = new URL(window.location);
+    url.searchParams.set("variant", variantId);
+    window.history.pushState({}, "", url);
+    window.location.reload();
+  };
+</script>
 
 <!-- Reviews -->
 <div class="mt-4">
@@ -78,13 +132,7 @@ const { price, title } = Astro.props as Props;
   </div>
   <div class="mt-6">
     <p class="text-base text-zinc-900">
-      This store is for demo purposes only. No orders will be fulfilled. Please
-      visit the brand's <a
-        class="text-emerald-900 underline"
-        href="https://www.lateafternoons.ca"
-        target="_blank"
-        rel="noopener noreferer">website</a
-      > to purchase this product.
+      This store is for demo purposes only. No orders will be fulfilled.
     </p>
   </div>
 </div>
