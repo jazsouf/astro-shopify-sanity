@@ -28,7 +28,7 @@ const selectedVariant =
 {
   variants.length > 1 && (
     <div class="mt-6">
-      <h3 class="mb-3 text-sm font-medium text-zinc-700">Select Variant</h3>
+      <h3 class="mb-3 text-sm font-medium text-zinc-700">Select</h3>
       <div class="flex flex-wrap gap-2">
         {variants.map((variant) => (
           <button
@@ -64,12 +64,17 @@ const selectedVariant =
 <script is:inline>
   window.selectVariant = function (button) {
     const variantId = button.dataset.variantId;
-    
-    // Update gallery image immediately for better UX
-    if (typeof window.updateGalleryForVariant === 'function') {
+
+    // Update gallery image if the function exists
+    if (typeof window.updateGalleryForVariant === "function") {
       window.updateGalleryForVariant(variantId);
     }
-    
+
+    // Notify AddToCartForm of variant change
+    window.dispatchEvent(
+      new CustomEvent("variantChanged", { detail: { variantId } }),
+    );
+
     // Update URL and navigate to sync with server state
     const url = new URL(window.location);
     url.searchParams.set("variant", variantId);

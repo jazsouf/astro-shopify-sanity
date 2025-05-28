@@ -1,4 +1,8 @@
-# Astro starter theme to build a headless ecommerce website with Shopify
+# Astro starter theme to build a headless ecommerce website with Shopify and Sanity
+
+This theme is an extension of the work done by Thomas. If you want to check the original code, click here.
+This extension adds a Sanity content management system, synced with Shopify for better control on your website.
+Also added is variant selection to product pages for a more featured theme.
 
 The theme is built with Svelte but you can use any framework you like (React, Vue, Solid etc.) thanks to Astro.
 Tailwind UI free components are used for the design.
@@ -70,4 +74,5 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro --help` | Get help using the Astro CLI                     |
 
 ## ⚡️ Lighthouse
+
 ![lighthouse_astro_shopify](https://user-images.githubusercontent.com/10447155/214448698-ce2a1ef6-6fbd-4fca-b8b6-c5194b72a15b.jpg)

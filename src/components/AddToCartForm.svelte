@@ -2,22 +2,52 @@
   import { preventDefault } from 'svelte/legacy';
 
   import { addCartItem, isCartUpdating, cart } from "../stores/cart";
-
+  import type { VariantResult } from "../data/shopify/schemas";
+  import type { z } from "zod";
 
   interface Props {
     variantId: string;
     variantQuantityAvailable: number;
     variantAvailableForSale: boolean;
+    variants: z.infer<typeof VariantResult>[];
   }
 
-  let { variantId, variantQuantityAvailable, variantAvailableForSale }: Props = $props();
+  let { variantId, variantQuantityAvailable, variantAvailableForSale, variants }: Props = $props();
 
-  // Check if the variant is already in the cart and if there are any units left
+  // Get selected variant from URL parameters
+  let selectedVariantId = $state(variantId);
+  let selectedVariant = $derived(variants.find(v => v.id === selectedVariantId) || variants[0]);
+
+  // Update selected variant when URL changes
+  function updateSelectedVariant() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlVariantId = urlParams.get('variant');
+    if (urlVariantId && urlVariantId !== selectedVariantId) {
+      selectedVariantId = urlVariantId;
+    }
+  }
+
+  // Listen for variant change events and URL changes
+  if (typeof window !== 'undefined') {
+    // Listen for custom variant change events
+    window.addEventListener('variantChanged', (event) => {
+      const { variantId: newVariantId } = event.detail;
+      if (newVariantId && newVariantId !== selectedVariantId) {
+        selectedVariantId = newVariantId;
+      }
+    });
+    
+    window.addEventListener('popstate', updateSelectedVariant);
+    // Check URL on component mount
+    updateSelectedVariant();
+  }
+
+  // Check if the selected variant is already in the cart and if there are any units left
   let variantInCart =
     $derived($cart &&
-    $cart.lines?.nodes.filter((item) => item.merchandise.id === variantId)[0]);
+    $cart.lines?.nodes.filter((item) => item.merchandise.id === selectedVariantId)[0]);
   let noQuantityLeft =
-    $derived(variantInCart && variantQuantityAvailable <= variantInCart?.quantity);
+    $derived(variantInCart && selectedVariant && selectedVariant.quantityAvailable <= (variantInCart?.quantity || 0));
 
   function addToCart(e: Event) {
     const form = e.target as HTMLFormElement;
@@ -32,13 +62,13 @@
 </script>
 
 <form onsubmit={preventDefault((e) => addToCart(e))}>
-  <input type="hidden" name="id" value={variantId} />
+  <input type="hidden" name="id" value={selectedVariantId} />
   <input type="hidden" name="quantity" value="1" />
 
   <button
     type="submit"
     class="button mt-10 w-full"
-    disabled={$isCartUpdating || noQuantityLeft || !variantAvailableForSale}
+    disabled={$isCartUpdating || noQuantityLeft || !selectedVariant?.availableForSale}
   >
     {#if $isCartUpdating}
       <svg
@@ -62,7 +92,7 @@
         />
       </svg>
     {/if}
-    {#if variantAvailableForSale}
+    {#if selectedVariant?.availableForSale}
       Add to bag
     {:else}
       Sold out
