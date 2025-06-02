@@ -3,9 +3,9 @@
 This theme is an extension of the work done by [Thomas](https://github.com/thomasKn). If you want to check the original code, [click here](https://github.com/thomasKn/astro-shopify).
 
 This reposition adds a Sanity studio content management system, synced with Shopify for better control on your website.
-Also added is variant selection to product pages for a more featured theme.
+I also added variant selection to product pages for a more featured theme.
 
-The theme is built with Svelte and React components and you can use any framework you like (Vue, Solid etc.) thanks to Astro.
+The theme is built with Svelte components and you can use any framework you like (Vue, Solid etc.) thanks to Astro.
 Tailwind CSS 4 is used for styling with a modern design system.
 
 ## ✨ New Features
