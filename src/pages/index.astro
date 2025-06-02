@@ -1,6 +1,5 @@
 ---
 import { getHomePage } from "../data/sanity";
-import type { HOME_QUERYResult } from "../data/sanity/types.generated";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageBuilder from "../components/PageBuilder.astro";
 
@@ -8,7 +7,7 @@ import { setCache } from "../utils/cache";
 
 const defaultTitle = "Astro + Shopify";
 
-const homePage: HOME_QUERYResult = (await getHomePage()).data;
+const homePage = (await getHomePage()).data;
 
 if (!homePage) {
   Astro.redirect("/404");

@@ -1,9 +1,5 @@
 ---
-import { getHomePage, getModularPage } from "../data/sanity";
-import type {
-  HOME_QUERYResult,
-  MODULAR_PAGE_QUERYResult,
-} from "../data/sanity/types.generated";
+import { getModularPage } from "../data/sanity";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageBuilder from "../components/PageBuilder.astro";
 
@@ -15,9 +11,7 @@ if (!Astro.params.slug) {
   Astro.redirect("/404");
 }
 
-const modularPage: MODULAR_PAGE_QUERYResult = (
-  await getModularPage(Astro.params.slug ?? "")
-).data;
+const modularPage = (await getModularPage(Astro.params.slug ?? "")).data;
 
 if (!modularPage) {
   Astro.redirect("/404");
