@@ -18,7 +18,7 @@ Tailwind CSS 4 is used for styling with a modern design system.
 - **Custom Schema Types**: Products, collections, pages, and global settings
 - **Server-Side Rendering**: Built for performance with Astro's SSR capabilities
 
-![astro_shopify_preview](https://user-images.githubusercontent.com/10447155/214480671-8380f410-cbfb-4f53-a6bb-5c744073e2f2.jpg)
+![astro_shopify_preview](https://cdn.sanity.io/images/81pocpw8/production/af923e749c4655b655209f527eb097df8256fd11-2880x1800.png)
 
 ## 🧑‍🚀 Where to start
 
