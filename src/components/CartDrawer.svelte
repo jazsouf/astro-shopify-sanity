@@ -174,7 +174,7 @@
                             <p class="text-xs">
                               <Money price={item.cost.amountPerQuantity} showCurrency={false} />
                             </p>
-                            
+
                             <!-- Quantity Controls -->
                             <div class="flex items-center gap-2 mt-2">
                               <button
@@ -187,11 +187,11 @@
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                                 </svg>
                               </button>
-                              
+
                               <span class="min-w-[2rem] text-center text-sm font-medium">
                                 {item.quantity}
                               </span>
-                              
+
                               <button
                                 onclick={() => updateQuantity(item.id, item.quantity + 1)}
                                 disabled={$isCartUpdating}
@@ -244,7 +244,7 @@
                     <div class="text-center mt-20">
                       <p class="text-gray-500">Your cart is empty</p>
                       <a
-                        href="/"
+                        href="/products"
                         class="font-semibold text-emerald-900 hover:text-emerald-700"
                       >
                         Continue Shopping
